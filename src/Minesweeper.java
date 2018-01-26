@@ -125,16 +125,15 @@ public class Minesweeper {
 
     public static void main(String[] arg) {
         Scanner input = new Scanner(System.in);
-
         boolean isNumber;
 
         do {
-            System.out.print("Choose field width. Enter only whole numbers between 2 and 99!");
+            System.out.print("Choose field width. Enter only whole numbers between 5 and 99!");
 
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
-                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                System.out.println("Try again! Enter only whole numbers between 5 and 99!");
                 isNumber = false;
                 input.next();
             }
