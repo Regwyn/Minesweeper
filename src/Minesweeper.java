@@ -2,8 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Minesweeper {
-
-
+    
     public static int[][] initializeMap(int howManyMines, int[][] emptyMap) {    // какво са howManyMines и emptyMap. Не ги виждам на друго място.
         Random random = new Random();
 
@@ -124,7 +123,7 @@ public class Minesweeper {
         return newCover;
     }
 
-    public static int getX(Scanner input) {
+    public static int getRangeX(Scanner input) {
         boolean isNumber;
 
         do {
@@ -142,11 +141,69 @@ public class Minesweeper {
         return input.nextInt();
     }
 
-    public static int getY(Scanner input) {
+    public static int getRangeY(Scanner input) {
         boolean isNumber;
 
         do {
             System.out.print("Choose field width. Enter only whole numbers between 2 and 99!");
+            if (input.hasNextInt()) {
+                isNumber = true;
+            } else {
+                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                isNumber = false;
+                input.next();
+            }
+        } while (!(isNumber));
+        return input.nextInt();
+    }
+
+    public static int getX(Scanner input, int countMines, int counterMarks) {
+        boolean isNumber;
+
+        do {
+            System.out.println("You have " + (countMines + 1) + " total marks");
+            System.out.println("You have " + ((countMines + 1) - counterMarks) + "  marks left");
+            System.out.print("In which row is the cell?");
+
+            if (input.hasNextInt()) {
+                isNumber = true;
+            } else {
+                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                isNumber = false;
+                input.next();
+            }
+        } while (!(isNumber));
+        return input.nextInt();
+    }
+
+    public static int getY(Scanner input, int countMines, int counterMarks) {
+        boolean isNumber;
+
+        do {
+            System.out.println("You have " + (countMines + 1) + " total marks");
+            System.out.println("You have " + ((countMines + 1) - counterMarks) + "  marks left");
+            System.out.print("In which row is the cell?");
+
+            if (input.hasNextInt()) {
+                isNumber = true;
+            } else {
+                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                isNumber = false;
+                input.next();
+            }
+        } while (!(isNumber));
+        return input.nextInt();
+    }
+
+    public static int getAction(Scanner input) {
+        boolean isNumber;
+
+        do {
+            System.out.println("Choose an action!");
+            System.out.println("[1]Open");
+            System.out.println("[2]Mark/Unmark");
+            System.out.println("[3]Surrender. All cells will be shown!");
+
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
@@ -160,13 +217,12 @@ public class Minesweeper {
 
     public static void main(String[] arg) {
         Scanner input = new Scanner(System.in);
-        boolean isNumber;
 
-        int rangeX = getX(input);
-        int rangeY = getY(input);
+        int rangeX = getRangeX(input);
+        int rangeY = getRangeY(input);
 
-        int[][] cover = new int[rangeY + 2][rangeX + 2];
-        int[][] map = new int[rangeY + 2][rangeX + 2];
+        int[][] cover = new int[rangeY + 2][rangeX + 2]; //for cover: -2 = border, -1 = mine, 0 = empty
+        int[][] map = new int[rangeY + 2][rangeX + 2];   //for map:   -1 = marked, 0 = hidden, -1 = open
 
         int countMines = Math.round(rangeX * rangeY / 16);
         boolean boom = false;
@@ -176,68 +232,12 @@ public class Minesweeper {
         System.out.println("There are " + countMines + " mines which are 1/4 of the field.");
         map = initializeMap(countMines, map);
 
-        //for map
-        //-2 = border
-        //-1 = mine
-        //0 = empty
-
-        //for cover
-        //-1 = marked
-        //0 = hidden
-        //1 = open
-
-        for (int i = 0; i < cover.length; i++) {
-            for (int j = 0; j < cover[0].length; j++) {
-                cover[i][j] = 0;
-            }
-        }
-
         while (!boom) {
             showMap(cover, map);
 
-            do {
-                System.out.println("You have " + (countMines + 1) + " total marks");
-                System.out.println("You have " + ((countMines + 1) - counterMarks) + "  marks left");
-                System.out.print("In which row is the cell?");
-
-                if (input.hasNextInt()) {
-                    isNumber = true;
-                } else {
-                    System.out.println("Try again! Enter only whole numbers between 2 and 99!");
-                    isNumber = false;
-                    input.next();
-                }
-            } while (!(isNumber));
-            int x = input.nextInt();
-
-            do {
-                System.out.print("In which column is the cell?");
-
-                if (input.hasNextInt()) {
-                    isNumber = true;
-                } else {
-                    System.out.println("Try again! Enter only whole numbers between 2 and 99!");
-                    isNumber = false;
-                    input.next();
-                }
-            } while (!(isNumber));
-            int y = input.nextInt();
-
-            do {
-                System.out.println("Choose an action!");
-                System.out.println("[1]Open");
-                System.out.println("[2]Mark/Unmark");
-                System.out.println("[3]Surrender. All cells will be shown!");
-
-                if (input.hasNextInt()) {
-                    isNumber = true;
-                } else {
-                    System.out.println("Try again! Enter only whole numbers between 2 and 99!");
-                    isNumber = false;
-                    input.next();
-                }
-            } while (!(isNumber));
-            int action = input.nextInt();
+            int x = getX(input, countMines, counterMarks);
+            int y = getY(input, countMines, counterMarks);
+            int action = getAction(input);
 
             if (action == 1) {
                 cover = openCell(x, y, map, cover);
@@ -262,10 +262,10 @@ public class Minesweeper {
                             System.out.println("You don't have marks left!");
                         }
                     } else {
-                        System.out.println("You can't mark a border");
+                        System.out.println("There are no such coordinates!");
                     }
                 } else {
-                    System.out.println("You can't mark it if it's open");
+                    System.out.println("You can't mark a cell that has already been opened!");
                 }
             } else if (action == 3) {
                 System.out.println("Game over!");
