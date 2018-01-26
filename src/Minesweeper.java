@@ -2,31 +2,31 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Minesweeper {
-    
-    public static int[][] initializeMap(int howManyMines, int[][] emptyMap) {    // какво са howManyMines и emptyMap. Не ги виждам на друго място.
+
+    public static int[][] initializeMap(int countMines, int[][] emptyMap) { //emptyMap is map from row 225
         Random random = new Random();
 
         for (int i = 0; i < emptyMap.length; i++) {
-            emptyMap[i][0] = -2;                         //Приписва на първата колона код -2 за граница.
-            emptyMap[i][emptyMap[0].length - 1] = -2;    //Приписва на последната колона код -2 за граница.
+            emptyMap[i][0] = -2;                         //Adds border code -2 to the first column.
+            emptyMap[i][emptyMap[0].length - 1] = -2;    //Adds border code -2 to the last column.
         }
         for (int i = 0; i < emptyMap[0].length; i++) {
-            emptyMap[0][i] = -2;                         //Приписва на първият ред код -2 за граница.
-            emptyMap[emptyMap.length - 1][i] = -2;       //Приписва на последният ред код -2 за граница.
+            emptyMap[0][i] = -2;                         //Adds border code -2 to the first row.
+            emptyMap[emptyMap.length - 1][i] = -2;       //Adds border code -2 to the last row.
         }
-        for (int i = 0; i <= howManyMines; i++) {
-            int randX = random.nextInt(emptyMap.length);         //emptyMap.length е максималната стойност
-            int randY = random.nextInt(emptyMap[0].length);      //emptyMap[0].length е максималната стойност
-            while (emptyMap[randX][randY] == -1 || emptyMap[randX][randY] == -2) {  //не го разбирам
+        for (int i = 0; i <= countMines; i++) { // Max random is the count of mines.
+            int randX = random.nextInt(emptyMap.length); // Randomizes the X coordinates.
+            int randY = random.nextInt(emptyMap[0].length); // Randomizes the Y coordinates.
+            while (emptyMap[randX][randY] == -1 || emptyMap[randX][randY] == -2) {
                 randX = random.nextInt(emptyMap.length);
                 randY = random.nextInt(emptyMap[0].length);
             }
-            emptyMap[randX][randY] = -1;   //записва на съответните рандом избрани координати кода за мина -1
+            emptyMap[randX][randY] = -1;   //Assigns code -1 for mine at the chosen coordinates
         }
-        for (int i = 1; i < emptyMap.length - 1; i++) {
+        for (int i = 1; i < emptyMap.length - 1; i++) { //Adds the code - 1 without the borderlines starting to count from 1, not 0.
             for (int j = 1; j < emptyMap[0].length - 1; j++) {
                 if (emptyMap[i][j] != -1)
-                    emptyMap[i][j] = minesAround(i, j, emptyMap);
+                    emptyMap[i][j] = minesAround(i, j, emptyMap); //Assigns the count of mines around the current cell.
             }
         }
         return emptyMap;
@@ -36,7 +36,7 @@ public class Minesweeper {
         int count = 0;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                if (map[x + i][y + j] == -1) {    //Обикаля околните клетки на сегашната и проверява ако има бомба (-1 е код за бомба)
+                if (map[x + i][y + j] == -1) {    //Counts the number of mines around the current cell.
                     count++;
                 }
             }
@@ -47,56 +47,54 @@ public class Minesweeper {
     public static void showMap(int[][] cover, int[][] map) {
         System.out.print("  ");
         for (int i = 0; i < map[0].length - 1; i++) {
-            if (i > 0 && i < 10) {                   //Номерира и оформя едноцифрени колони
+            if (i > 0 && i < 10) {                   //Numerates and shapes the single digit columns.
                 System.out.print("  " + i + "");
             }
-            if (i == 9) {                            //Намества и определя началото на двуцифрените колони
+            if (i == 9) {                            //Places and defines the start of the double digit columns.
                 System.out.print("  ");
             }
-            if (i >= 10 && i < 100) {                //Номерира и оформя двуцифрените колони
+            if (i >= 10 && i < 100) {                //Numerates and shapes the double digit columns.
                 System.out.print(i + " ");
             }
         }
         for (int i = 0; i < map.length - 1; i++) {
-            if (i < 10 && i > 0) {                   //Номерира и оформя едноцифрени редове
+            if (i < 10 && i > 0) {                   //Numerates and shapes the single digit rows.
                 System.out.print(" " + i);
             }
-            if (i >= 10 && i < 100) {                //Номерира двуцифрени редове
+            if (i >= 10 && i < 100) {                //Numerates the double digit rows.
                 System.out.print(i);
             }
             for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] == -2) {           //Това е нулев ред който избутва със еднопразно място клетките от цифрите отговарящи за дадения ред. ????? Не може ли просто с един sout " "
-                    if (i < 10 && j == 0) {
-                        System.out.print(" ");
-                    } else if (j == 0) {
-                        System.out.print(" ");
-                    } else {
-                        System.out.print(" ");
-                    }
-                } else if (cover[i][j] == 1) {    //Ако клетката е отворена...
+                if (map[i][j] == -2) {           //That's a border/zero row which separates/pushes with space the cells from the row numerations.
+                    System.out.print(" ");
+                } else if (cover[i][j] == 1) {   //If the cell is opened...
                     if (map[i][j] == -1) {
-                        System.out.print("[X]");                                //...поставя знак за открита бомба след отваряне на клетката.
+                        System.out.print("[X]");                                //...Puts sign for revealed bomb.
                     } else {
-                        System.out.print("[" + minesAround(i, j, map) + "]");   //...поставя скобии визуализира с цифра колко мини има около тази клетка.
+                        System.out.print("[" + minesAround(i, j, map) + "]");   //Puts brackets and visualizes with number how many mines are around the current cell.
                     }
-                } else if (cover[i][j] == 0) {        //Ако не е отворена...
-                    System.out.print("[ ]");          //...поставя скоби(действието се извършва веднага след избирането на размера на рамката).
+                } else if (cover[i][j] == 0) {        //If the cell isn't opened...
+                    System.out.print("[ ]");          //...puts brackets right after choosing the board size.
                 } else {
-                    System.out.print("[M]");          //Поставя флагче
+                    System.out.print("[M]");
                 }
             }
             System.out.println();
         }
     }
-
+    
     public static int[][] openEmptyAround(int x, int y, int[][] map, int[][] cover) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 if (map[x + i][y + j] == 0 && cover[x + i][y + j] == 0) {
                     cover[x + i][y + j] = 1;
                     cover = openEmptyAround(x + i, y + j, map, cover);
-                } else {
-                    continue;
+                }
+                if (map[x + i][y + j] > 0 && (cover[x + i][y + j] == 0) && (map[(x - 1) + i][(y - 1) + j] == 0 ||
+                        map[(x - 1) + i][(y + 1) + j] == 0 || map[x + i][(y - 1) + j] == 0 || map[x + i][(y + 1) + j] == 0
+                        || map[(x + 1) + i][(y - 1) + j] == 0 || map[(x + 1) + i][y + j] == 0 || map[(x + 1) + i][(y + 1) + j] == 0)) {
+                    cover[x + i][y + j] = 1;
+                    cover = openEmptyAround(x + i, y + j, map, cover);
                 }
             }
         }
@@ -107,7 +105,7 @@ public class Minesweeper {
         int[][] newCover = cover;
 
         if (map[x][y] == -2) {
-            System.out.println("You can't open a border");   //При въвеждане на първа или втора координатна цифра 0 се избира първия ред или колона, които са граници с празно поле.
+            System.out.println("You can't open a border");   //If x or y are 0 then this is the borders with code -2.
         } else if (map[x][y] == -1) {
             newCover[x][y] = 1;
             System.out.println("You opened a mine!!!");
@@ -221,10 +219,10 @@ public class Minesweeper {
         int rangeX = getRangeX(input);
         int rangeY = getRangeY(input);
 
-        int[][] cover = new int[rangeY + 2][rangeX + 2]; //for cover: -2 = border, -1 = mine, 0 = empty
-        int[][] map = new int[rangeY + 2][rangeX + 2];   //for map:   -1 = marked, 0 = hidden, -1 = open
+        int[][] cover = new int[rangeY + 2][rangeX + 2]; //for cover:   -1 = marked, 0 = hidden, 1 = open
+        int[][] map = new int[rangeY + 2][rangeX + 2];   //for map: -2 = border, -1 = mine, 0 = empty
 
-        int countMines = Math.round(rangeX * rangeY / 16);
+        int countMines = Math.round(rangeX * rangeY / 8);
         boolean boom = false;
         int counterMarks = 0;
         int markedMines = 0;
