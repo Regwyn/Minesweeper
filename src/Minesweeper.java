@@ -82,7 +82,7 @@ public class Minesweeper {
             System.out.println();
         }
     }
-    
+
     public static int[][] openEmptyAround(int x, int y, int[][] map, int[][] cover) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
@@ -90,9 +90,16 @@ public class Minesweeper {
                     cover[x + i][y + j] = 1;
                     cover = openEmptyAround(x + i, y + j, map, cover);
                 }
-                if (map[x + i][y + j] > 0 && (cover[x + i][y + j] == 0) && (map[(x - 1) + i][(y - 1) + j] == 0 ||
-                        map[(x - 1) + i][(y + 1) + j] == 0 || map[x + i][(y - 1) + j] == 0 || map[x + i][(y + 1) + j] == 0
-                        || map[(x + 1) + i][(y - 1) + j] == 0 || map[(x + 1) + i][y + j] == 0 || map[(x + 1) + i][(y + 1) + j] == 0)) {
+                if (map[x + i][y + j] > 0 && (cover[x + i][y + j] == 0) &&
+
+                        (map[(x - 1) + i][(y - 1) + j] == 0 ||
+                                map[(x - 1) + i][y + j] == 0 ||
+                                map[(x - 1) + i][(y + 1) + j] == 0 ||
+                                map[x + i][(y - 1) + j] == 0 ||
+                                map[x + i][(y + 1) + j] == 0 ||
+                                map[(x + 1) + i][(y - 1) + j] == 0 ||
+                                map[(x + 1) + i][y + j] == 0 ||
+                                map[(x + 1) + i][(y + 1) + j] == 0)) {
                     cover[x + i][y + j] = 1;
                     cover = openEmptyAround(x + i, y + j, map, cover);
                 }
@@ -125,11 +132,11 @@ public class Minesweeper {
         boolean isNumber;
 
         do {
-            System.out.print("Choose field width. Enter only whole numbers between 2 and 99!");
+            System.out.print("Choose field width. Enter only whole numbers!");
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
-                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                System.out.println("Try again! Enter only whole numbers!");
                 isNumber = false;
                 input.next();
             }
@@ -143,11 +150,11 @@ public class Minesweeper {
         boolean isNumber;
 
         do {
-            System.out.print("Choose field width. Enter only whole numbers between 2 and 99!");
+            System.out.print("Choose field height. Enter only whole numbers!");
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
-                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                System.out.println("Try again! Enter only whole numbers!");
                 isNumber = false;
                 input.next();
             }
@@ -166,7 +173,7 @@ public class Minesweeper {
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
-                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                System.out.println("Try again! Enter only whole numbers!");
                 isNumber = false;
                 input.next();
             }
@@ -180,12 +187,12 @@ public class Minesweeper {
         do {
             System.out.println("You have " + (countMines + 1) + " total marks");
             System.out.println("You have " + ((countMines + 1) - counterMarks) + "  marks left");
-            System.out.print("In which row is the cell?");
+            System.out.print("In which column is the cell?");
 
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
-                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                System.out.println("Try again! Enter only whole numbers!");
                 isNumber = false;
                 input.next();
             }
@@ -197,15 +204,12 @@ public class Minesweeper {
         boolean isNumber;
 
         do {
-            System.out.println("Choose an action!");
-            System.out.println("[1]Open");
-            System.out.println("[2]Mark/Unmark");
-            System.out.println("[3]Surrender. All cells will be shown!");
+            System.out.println("Choose an action!" + "\n" + "[1]Open" + "\n" + "[2]Mark/Unmark" + "\n" + "[3]Surrender. All cells will be shown!");
 
             if (input.hasNextInt()) {
                 isNumber = true;
             } else {
-                System.out.println("Try again! Enter only whole numbers between 2 and 99!");
+                System.out.println("Try again! Enter only whole numbers!");
                 isNumber = false;
                 input.next();
             }
@@ -227,7 +231,7 @@ public class Minesweeper {
         int counterMarks = 0;
         int markedMines = 0;
 
-        System.out.println("There are " + countMines + " mines which are 1/4 of the field.");
+        System.out.println("There are " + countMines + " mines which are around 1/8 of the field.");
         map = initializeMap(countMines, map);
 
         while (!boom) {
