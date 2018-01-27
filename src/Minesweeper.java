@@ -1,5 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Minesweeper {
 
@@ -142,7 +144,6 @@ public class Minesweeper {
             }
         } while (!(isNumber));
 
-
         return input.nextInt();
     }
 
@@ -218,6 +219,16 @@ public class Minesweeper {
     }
 
     public static void main(String[] arg) {
+//        Timer tickTock = new Timer();
+//        TimerTask tickTockTask = new TimerTask() {
+//            int elapsedTime = 0;
+//
+//            public void run() {
+//                elapsedTime++;
+//                System.out.print(elapsedTime + " ");
+//            }
+//        };
+//        tickTock.schedule(tickTockTask, 1000, 1000);
         Scanner input = new Scanner(System.in);
 
         int rangeX = getRangeX(input);
